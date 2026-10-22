@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="fr" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>QCM Médecine</title>
+<meta name="description" content="Banque de QCM de médecine par UE et par matière : entraînement, tests aléatoires de 20 QCM, correction détaillée.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%2300e5ff'/%3E%3Cstop offset='1' stop-color='%231e5fd6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx='32' cy='32' r='30' fill='url(%23g)'/%3E%3Cpath d='M19 33l9 9 17-19' stroke='%23fff' stroke-width='6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+<script>
+  try { var t = localStorage.getItem('qcm.theme'); if (t) document.documentElement.setAttribute('data-theme', t); } catch (e) {}
+</script>
+</head>
+<body>
+  <header class="topbar">
+    <button class="orb orb-lime" id="homeBtn" title="Accueil" aria-label="Accueil">
+      <svg viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg>
+    </button>
+    <div class="topbar-title" id="topTitle">QCM Médecine</div>
+    <div class="topbar-actions">
+      <button class="orb orb-purple" id="settingsBtn" title="Paramètres" aria-label="Paramètres">
+        <svg viewBox="0 0 24 24"><path d="M19.4 13a7.5 7.5 0 0 0 0-2l2-1.6-2-3.4-2.4 1a7.6 7.6 0 0 0-1.7-1L15 3.5h-4L10.7 6a7.6 7.6 0 0 0-1.7 1l-2.4-1-2 3.4 2 1.6a7.5 7.5 0 0 0 0 2l-2 1.6 2 3.4 2.4-1a7.6 7.6 0 0 0 1.7 1l.3 2.5h4l.3-2.5a7.6 7.6 0 0 0 1.7-1l2.4 1 2-3.4zM13 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z" transform="translate(-1 0)"/></svg>
+      </button>
+      <button class="orb orb-cyan" id="themeBtn" title="Mode jour / nuit" aria-label="Basculer le thème">
+        <svg class="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"/></svg>
+        <svg class="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.5"/><path d="M12 1.5v3M12 19.5v3M1.5 12h3M19.5 12h3M4.6 4.6l2.1 2.1M17.3 17.3l2.1 2.1M4.6 19.4l2.1-2.1M17.3 6.7l2.1-2.1" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main id="app"></main>
+
+  <!-- Paramètres -->
+  <div class="modal" id="settingsModal" hidden>
+    <div class="modal-card">
+      <div class="modal-head">
+        <h2>Paramètres</h2>
+        <button class="icon-btn" data-close aria-label="Fermer">✕</button>
+      </div>
+      <div class="set-row">
+        <div>
+          <div class="set-label">Chronomètre</div>
+          <div class="set-hint">Limiter le temps de réponse</div>
+        </div>
+        <label class="switch"><input type="checkbox" id="setTimer"><span></span></label>
+      </div>
+      <div class="set-sub" id="timerOpts">
+        <div class="seg" id="setTimerMode">
+          <button data-v="question">Par question</button>
+          <button data-v="total">Pour tout le test</button>
+        </div>
+        <div class="range-row">
+          <input type="range" id="setTimerQ" min="15" max="300" step="15">
+          <output id="setTimerQOut"></output>
+        </div>
+        <div class="range-row">
+          <input type="range" id="setTimerT" min="5" max="90" step="5">
+          <output id="setTimerTOut"></output>
+        </div>
+        <div class="set-hint">Le chrono s'applique au mode test. Cochez ci-dessous pour l'activer aussi en entraînement.</div>
+        <label class="check-line"><input type="checkbox" id="setTimerBank"> Aussi en entraînement (par question)</label>
+      </div>
+      <div class="set-row">
+        <div>
+          <div class="set-label">Correction immédiate en test</div>
+          <div class="set-hint">Sinon, la correction s'affiche à la fin des 20 QCM</div>
+        </div>
+        <label class="switch orange"><input type="checkbox" id="setInstant"><span></span></label>
+      </div>
+      <div class="set-row">
+        <div>
+          <div class="set-label">Nombre de QCM par test</div>
+          <div class="set-hint">20 par défaut</div>
+        </div>
+        <div class="stepper"><button id="nMinus">−</button><output id="setN">20</output><button id="nPlus">+</button></div>
+      </div>
+      <div class="set-row">
+        <div>
+          <div class="set-label">Inclure les QCM complétés par Claude</div>
+          <div class="set-hint">Questions marquées ⚠ (items ajoutés)</div>
+        </div>
+        <label class="switch"><input type="checkbox" id="setGen"><span></span></label>
+      </div>
+      <div class="set-row danger-row">
+        <div>
+          <div class="set-label">Remettre à zéro ma progression</div>
+          <div class="set-hint">Efface les scores enregistrés sur cet appareil</div>
+        </div>
+        <button class="pill-btn small red" id="resetBtn">Effacer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Zoom image -->
+  <div class="lightbox" id="lightbox" hidden><img alt=""></div>
+
+  <script src="data/questions.js"></script>
+  <script src="assets/app.js"></script>
+</body>
+</html>
